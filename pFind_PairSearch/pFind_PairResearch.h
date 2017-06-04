@@ -13,10 +13,10 @@ struct spectra
 	double mass_shift;
 	double raw_score;
 	string final_score;
-	string Modification;
-	int specificity;
-	string proteins;
-	string positions;
+	string modi;
+	int spec;
+	string prot;
+	string posi;
 	string label;
 	string targe="target";
 	int mc_sites;
