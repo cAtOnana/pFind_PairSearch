@@ -15,9 +15,10 @@ int main(int argc,char* argv[]) {
 		cout << "文件" << argv[1] << "打开失败，程序退出。";
 		exit(EXIT_FAILURE);
 	}
-	vector<spectra>list;
+	vector<spectra>list_modi, list_no;
 	spectra temp;
 	char ch;
+	int count_modi = 0,count_no=0;
 	while (in >> temp.file_name) {
 		in >> temp.scan_no;
 		in >> temp.exp_mh;
@@ -44,6 +45,9 @@ int main(int argc,char* argv[]) {
 		in >> temp.mc_sites;
 		in >> temp.afm_shift;
 		in >> temp.others;
-		list.push_back(temp);
+		if (temp.modi == "")
+			list_no.push_back(temp);
+		else if(int(temp.modi.find("->"))+1|| int(temp.modi.find("->")) + 1)
+			list_modi.push_back(temp);
 	}
 }
