@@ -18,7 +18,7 @@ struct spectra
 	string prot;
 	string posi;
 	string label;
-	string targe="target";
+	string targe;
 	int mc_sites;
 	double afm_shift;
 	int others;
