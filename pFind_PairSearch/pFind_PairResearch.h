@@ -8,7 +8,7 @@ struct spectra
 	double exp_mh;
 	int charge;
 	int q_value;
-	string sequence;
+	string seq;
 	double calc_mh;
 	double mass_shift;
 	double raw_score;
