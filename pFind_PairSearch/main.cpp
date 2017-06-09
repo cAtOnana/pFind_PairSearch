@@ -124,7 +124,7 @@ int main(){//int argc,char* argv[]) {
 						iter_modi = list_modi.begin() + marker_modi;//归位
 					}
 					else
-						temp2;
+						temp2++;
 				}
 				out << *iter_modi << endl;
 				iter_modi = list_modi.erase(iter_modi);//最后才打印原来的序列
