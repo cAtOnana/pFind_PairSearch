@@ -7,7 +7,7 @@ struct spectra
 	int scan_no;
 	double exp_mh;
 	int charge;
-	int q_value;
+	double q_value;
 	string seq;
 	double calc_mh;
 	double mass_shift;

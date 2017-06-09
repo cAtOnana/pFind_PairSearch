@@ -3,9 +3,11 @@
 #include<fstream>
 #include"pFind_PairResearch.h"
 #include<vector>
+#include <algorithm>
 const int paranum=2;
 using namespace std;
 ostream& operator<<(ostream& os, spectra& s);
+bool sortbyupper(spectra& n1, spectra& n2);//用于sort()函数的排序规则，这里为升序排列。sort()按照使此函数返回true的条件来排序目标数组
 int argc = 2;
 char* argv[2] = { "aaa","Hep_1.spectra" };
 int main(){//int argc,char* argv[]) {
@@ -59,13 +61,15 @@ int main(){//int argc,char* argv[]) {
 		in >> temp.mc_sites;
 		in >> temp.afm_shift;
 		in >> temp.others;
-		if (temp.targe != "target")
+		if (temp.targe != "target"||temp.q_value>=0.01)
 			continue;
 		if (temp.modi == "")
 			list_no.push_back(temp);
 		else if(int(temp.modi.find("->"))+1|| int(temp.modi.find("Carbamidomethyl")) + 1)//将modi项符合标准的项放入list_modi中
 			list_modi.push_back(temp);
 	}
+	sort(list_modi.begin(), list_modi.end(), sortbyupper);
+	sort(list_no.begin(), list_no.end(), sortbyupper);//对两vector升序排列，以便接下来的搜索
 	vector<spectra>::iterator iter_modi = list_modi.begin(), iter_no = list_no.begin();
 	int marker_modi = 0,marker_no=0;//标记正在对比的成员的序号，用于在erase后重新找到正在对比的位置
 	while (iter_no != list_no.end()) {
@@ -143,4 +147,9 @@ ostream & operator<<(ostream & os, spectra & s)
 		<< "	" << s.prot << "	" << s.posi << "	" << s.label << "	" << s.targe << "	" << s.mc_sites << "	" << s.afm_shift << "	"
 		<< s.others;
 	return os;
+}
+
+bool sortbyupper(spectra & n1, spectra & n2)
+{
+	return n1.seq<n2.seq;//从左往右（数组下标从大到小）越来越大，即升序排列。
 }
