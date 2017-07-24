@@ -9,7 +9,7 @@ using namespace std;
 ostream& operator<<(ostream& os, spectra& s);
 bool sortbyupper(spectra& n1, spectra& n2);//用于sort()函数的排序规则，这里为升序排列。sort()按照使此函数返回true的条件来排序目标数组
 int argc = 2;
-char* argv[2] = { "aaa","Hep_1.spectra" };
+char* argv[2] = { "aaa","all_openresearch_sample.spectra" };
 int main(){//int argc,char* argv[]) {
 	if (argc != paranum) {
 		cout << "参数数量异常，程序退出。";
@@ -63,10 +63,10 @@ int main(){//int argc,char* argv[]) {
 		in >> temp.others;
 		if (temp.targe != "target"||temp.q_value>=0.01)
 			continue;
-		if (temp.modi == "")
-			list_no.push_back(temp);
-		else if(int(temp.modi.find("->"))+1|| int(temp.modi.find("Carbamidomethyl")) + 1)//将modi项符合标准的项放入list_modi中
+		if(temp.modi.find("->")!=string::npos && temp.modi.find("Dha")==string::npos && temp.modi.find("Xle")==string::npos && temp.modi.find("pyro")==string::npos)//将有突变的项放入list_modi中
 			list_modi.push_back(temp);
+		else//其余项，包括有修饰无突变的和无修饰无突变的项，都放入list_no中
+			list_no.push_back(temp);
 	}
 	sort(list_modi.begin(), list_modi.end(), sortbyupper);
 	sort(list_no.begin(), list_no.end(), sortbyupper);//对两vector升序排列，以便接下来的搜索
@@ -151,5 +151,5 @@ ostream & operator<<(ostream & os, spectra & s)
 
 bool sortbyupper(spectra & n1, spectra & n2)
 {
-	return n1.seq<n2.seq;//从左往右（数组下标从大到小）越来越大，即升序排列。
+	return n1.seq<n2.seq;//从左往右（数组下标从小到大）越来越大，即升序排列。
 }
