@@ -4,22 +4,19 @@
 #include"pFind_PairResearch.h"
 #include<vector>
 #include <algorithm>
-const int paranum=2;
+const int paranum=7;
 using namespace std;
 ostream& operator<<(ostream& os, spectra& s);
+void readinloop(istream& in, vector<spectra>& list_no, vector<spectra>& list_modi);
 bool sortbyupper(spectra& n1, spectra& n2);//用于sort()函数的排序规则，这里为升序排列。sort()按照使此函数返回true的条件来排序目标数组
-int argc = 2;
-char* argv[2] = { "aaa","Hep_1.spectra" };
+int argc = 7;
+char* argv[7] = { "aaa","Hep_1.spectra","Hep_2.spectra","MHCC97H_1.spectra","MHCC97H_2.spectra","MHCCLM3_1.spectra","MHCCLM3_2.spectra" };
 int main(){//int argc,char* argv[]) {
 	if (argc != paranum) {
 		cout << "参数数量异常，程序退出。";
 		exit(EXIT_FAILURE);
 	}
-	ifstream in(argv[1]);
-	if (!in.is_open()) {
-		cout << "文件" << argv[1] << "打开失败，程序退出。";
-		exit(EXIT_FAILURE);
-	}
+
 	string outfilename = argv[1];
 	outfilename += "txt";
 	ofstream out(outfilename);
@@ -30,44 +27,16 @@ int main(){//int argc,char* argv[]) {
 
 	///
 	vector<spectra>list_modi, list_no;
-	spectra temp;
-	string waste;
-	getline(in, waste);//去除标题行
-	char ch;
-	int count_modi = 0,count_no=0;
-	while (in >> temp.file_name) {
-		in >> temp.scan_no;
-		in >> temp.exp_mh;
-		in >> temp.charge;
-		in >> temp.q_value;
-		in >> temp.seq;
-		in >> temp.calc_mh;
-		in >> temp.mass_shift;
-		in >> temp.raw_score;
-		in >> temp.final_score;
-		in.get(ch).get(ch);
-		if (ch == '\t')
-			temp.modi = "";
-		else
-		{
-			in >> temp.modi;
-			temp.modi = ch + temp.modi;
+	for (int i = 1; i < argc; i++) {
+		ifstream in(argv[i]);
+		if (!in.is_open()) {
+			cout << "文件" << argv[i] << "打开失败，程序退出。";
+			exit(EXIT_FAILURE);
 		}
-		in >> temp.spec;
-		in >> temp.prot;
-		in >> temp.posi;
-		in >> temp.label;
-		in >> temp.targe;
-		in >> temp.mc_sites;
-		in >> temp.afm_shift;
-		in >> temp.others;
-		if (temp.targe != "target"||temp.q_value>=0.01)
-			continue;
-		if (temp.modi == "")
-			list_no.push_back(temp);
-		else if(int(temp.modi.find("->"))+1|| int(temp.modi.find("Carbamidomethyl")) + 1)//将modi项符合标准的项放入list_modi中
-			list_modi.push_back(temp);
+		readinloop(in, list_no, list_modi);
+		in.close();
 	}
+	
 	sort(list_modi.begin(), list_modi.end(), sortbyupper);
 	sort(list_no.begin(), list_no.end(), sortbyupper);//对两vector升序排列，以便接下来的搜索
 	vector<spectra>::iterator iter_modi = list_modi.begin(), iter_no = list_no.begin();
@@ -135,7 +104,6 @@ int main(){//int argc,char* argv[]) {
 		marker_modi = 0;//归零
 		marker_no++;
 	}
-	in.close();
 	out.close();
 	return 0;
 }
@@ -147,6 +115,47 @@ ostream & operator<<(ostream & os, spectra & s)
 		<< "	" << s.prot << "	" << s.posi << "	" << s.label << "	" << s.targe << "	" << s.mc_sites << "	" << s.afm_shift << "	"
 		<< s.others;
 	return os;
+}
+
+void readinloop(istream & in, vector<spectra>& list_no, vector<spectra>& list_modi)
+{
+	char ch;
+	spectra temp;
+	string waste;
+	getline(in, waste);//去除标题行
+	while (in >> temp.file_name) {
+		in >> temp.scan_no;
+		in >> temp.exp_mh;
+		in >> temp.charge;
+		in >> temp.q_value;
+		in >> temp.seq;
+		in >> temp.calc_mh;
+		in >> temp.mass_shift;
+		in >> temp.raw_score;
+		in >> temp.final_score;
+		in.get(ch).get(ch);
+		if (ch == '\t')
+			temp.modi = "";
+		else
+		{
+			in >> temp.modi;
+			temp.modi = ch + temp.modi;
+		}
+		in >> temp.spec;
+		in >> temp.prot;
+		in >> temp.posi;
+		in >> temp.label;
+		in >> temp.targe;
+		in >> temp.mc_sites;
+		in >> temp.afm_shift;
+		in >> temp.others;
+		if (temp.targe != "target" || temp.q_value >= 0.01)
+			continue;
+		if (temp.modi == "")
+			list_no.push_back(temp);
+		else if (int(temp.modi.find("->")) + 1 || int(temp.modi.find("Carbamidomethyl")) + 1)//将modi项符合标准的项放入list_modi中
+			list_modi.push_back(temp);
+	}
 }
 
 bool sortbyupper(spectra & n1, spectra & n2)
