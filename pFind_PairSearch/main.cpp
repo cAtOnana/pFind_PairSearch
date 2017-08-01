@@ -10,7 +10,7 @@ ostream& operator<<(ostream& os, spectra& s);
 void readinloop(istream& in, vector<spectra>& list_no, vector<spectra>& list_modi);
 bool sortbyupper(spectra& n1, spectra& n2);//用于sort()函数的排序规则，这里为升序排列。sort()按照使此函数返回true的条件来排序目标数组
 int argc = 7;
-char* argv[7] = { "aaa","Hep_1.spectra","Hep_2.spectra","MHCC97H_1.spectra","MHCC97H_2.spectra","MHCCLM3_1.spectra","MHCCLM3_2.spectra" };
+char* argv[7] = { "aaa","Hep3B_1.spectra","Hep3B_2.spectra","MHCC97H_1.spectra","MHCC97H_2.spectra","MHCCLM3_1.spectra","MHCCLM3_2.spectra" };
 int main(){//int argc,char* argv[]) {
 	if (argc != paranum) {
 		cout << "参数数量异常，程序退出。";
@@ -150,7 +150,7 @@ void readinloop(istream & in, vector<spectra>& list_no, vector<spectra>& list_mo
 		in >> temp.afm_shift;
 		in >> temp.others;
 		//丢弃不符合条件的项
-		if (temp.targe != "target" || temp.q_value >= 0.01 ||(temp.modi.find("Xle") == string::npos && temp.modi.find("pyro") == string::npos))
+		if (temp.targe != "target" || temp.q_value >= 0.01 ||temp.modi.find("Xle") != string::npos || temp.modi.find("pyro") != string::npos)
 			continue;
 		//将突变项放入list_modi中
 		if (temp.modi.find("->")!=string::npos)
