@@ -149,12 +149,14 @@ void readinloop(istream & in, vector<spectra>& list_no, vector<spectra>& list_mo
 		in >> temp.mc_sites;
 		in >> temp.afm_shift;
 		in >> temp.others;
-		if (temp.targe != "target" || temp.q_value >= 0.01)
+		//丢弃不符合条件的项
+		if (temp.targe != "target" || temp.q_value >= 0.01 ||(temp.modi.find("Xle") == string::npos && temp.modi.find("pyro") == string::npos))
 			continue;
-		if (temp.modi == "")
-			list_no.push_back(temp);
-		else if (int(temp.modi.find("->")) + 1 || int(temp.modi.find("Carbamidomethyl")) + 1)//将modi项符合标准的项放入list_modi中
+		//将突变项放入list_modi中
+		if (temp.modi.find("->")!=string::npos)
 			list_modi.push_back(temp);
+		 else
+			 list_no.push_back(temp);
 	}
 }
 
