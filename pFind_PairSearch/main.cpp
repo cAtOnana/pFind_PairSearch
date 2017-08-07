@@ -153,8 +153,13 @@ void readinloop(istream & in, vector<spectra>& list_no, vector<spectra>& list_mo
 		if (temp.targe != "target" || temp.q_value >= 0.01 ||temp.modi.find("Xle") != string::npos || temp.modi.find("pyro") != string::npos)
 			continue;
 		//将突变项放入list_modi中
-		if (temp.modi.find("->")!=string::npos)
+		//若是openresearch，启用下面两行
+		//if (temp.modi.find("->")!=string::npos)
+		//	list_modi.push_back(temp);
+		//若是理论突变，启用下面两行
+		if (temp.prot.find("_SAP") != string::npos) {
 			list_modi.push_back(temp);
+		}
 		 else
 			 list_no.push_back(temp);
 	}
